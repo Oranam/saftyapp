@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1976d2">
+  <title>הדרכת בטיחות</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- ספריות חיצוניות ל-PDF וחתימות -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1 id="lbl-title">הדרכת בטיחות בציוד</h1>
+    <!-- selector שפות -->
+    <select id="langSelect" onchange="changeLanguage(this.value)">
+      <option value="he">עברית</option>
+      <option value="en">English</option>
+      <option value="hi">हिंदी</option>
+      <option value="th">ไทย</option>
+    </select>
+  </header>
+
+  <main>
+    <form id="safetyForm">
+      
+      <!-- תאריך ומקום -->
+      <section>
+        <label id="lbl-datetime">תאריך ושעה:</label>
+        <input type="text" id="dateTime" readonly>
+        
+        <label id="lbl-location">מקום ההדרכה:</label>
+        <input type="text" id="location" required>
+      </section>
+
+      <!-- פרטי עובד -->
+      <section>
+        <label id="lbl-empName">שם העובד:</label>
+        <input type="text" id="empName" required>
+        
+        <label id="lbl-empId">מספר עובד/ת"ז:</label>
+        <input type="text" id="empId" required>
+      </section>
+
+      <!-- צילום עובד -->
+      <section>
+        <label id="lbl-photo">צילום העובד:</label>
+        <input type="file" id="workerPhoto" accept="image/*" capture="camera" required>
+      </section>
+
+      <!-- סוג ציוד -->
+      <section>
+        <label id="lbl-equipment">סוג העגלה / הציוד:</label>
+        <select id="equipmentType">
+          <option value="forklift">מלגזה</option>
+          <option value="electric_pallet">עגלת משטחים חשמלית</option>
+          <option value="order_picker">מלקטת</option>
+        </select>
+      </section>
+
+      <!-- מבחן בטיחות -->
+      <section id="quizSection">
+        <h3 id="lbl-quizTitle">מבחן בטיחות קצר</h3>
+        <div class="question">
+          <p id="q1-text">1. מה יש לבדוק לפני תחילת משמרת?</p>
+          <label><input type="radio" name="q1" value="correct"> בלמים, צופר והיגוי</label><br>
+          <label><input type="radio" name="q1" value="wrong"> שום דבר, מניעים ונוסעים</label>
+        </div>
+      </section>
+
+      <!-- חתימות -->
+      <section>
+        <label id="lbl-empSig">חתימת העובד:</label>
+        <canvas id="empSigCanvas" width="300" height="150"></canvas>
+        <button type="button" onclick="clearSig(empSignaturePad)">נקה חתימה</button>
+
+        <label id="lbl-instSig">חתימת המדריך:</label>
+        <canvas id="instSigCanvas" width="300" height="150"></canvas>
+        <button type="button" onclick="clearSig(instSignaturePad)">נקה חתימה</button>
+      </section>
+
+      <button type="button" onclick="submitForm()">סכום ושמור טופס (PDF)</button>
+    </form>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
