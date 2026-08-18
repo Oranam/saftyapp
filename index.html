@@ -3,87 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1976d2">
-  <title>הדרכת בטיחות</title>
+  <title>טופס הדרכת בטיחות</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- ספריות חיצוניות ל-PDF וחתימות -->
+  <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 </head>
 <body>
 
   <header>
-    <h1 id="lbl-title">הדרכת בטיחות בציוד</h1>
-    <!-- selector שפות -->
-    <select id="langSelect" onchange="changeLanguage(this.value)">
-      <option value="he">עברית</option>
-      <option value="en">English</option>
-      <option value="hi">हिंदी</option>
-      <option value="th">ไทย</option>
-    </select>
+    <h1>טופס הדרכת בטיחות ציוד</h1>
   </header>
 
   <main>
-    <form id="safetyForm">
+    <section>
+      <label for="site-select">בחר מיקום:</label>
+      <select id="site-select">
+        <option value="">-- בחר מיקום --</option>
+        <option value="תנובות">תנובות</option>
+        <option value="תוספים">תוספים</option>
+        <option value="לבנים">לבנים</option>
+        <option value="גלבוע">גלבוע</option>
+      </select>
+
+      <label for="tool-select">בחר כלי/ציוד:</label>
+      <select id="tool-select">
+        <option value="">-- בחר כלי --</option>
+        <option value="אקסטרודר">אקסטרודר</option>
+        <option value="מערכת שקילה">מערכת שקילה</option>
+        <option value="מלגזה">מלגזה</option>
+        <option value="מערכת מים/צ'ילר">מערכת מים/צ'ילר</option>
+      </select>
+
+      <!-- אזור הסבר קצר על הכלי הנבחר -->
+      <div id="tool-info" style="display:none; background:#eef7ff; padding:10px; border-right:4px solid #1976d2; margin-top:10px; border-radius:4px;">
+        <strong>הנחיות בטיחות לכלי:</strong>
+        <p id="tool-desc" style="margin:5px 0 0 0;"></p>
+      </div>
+    </section>
+
+    <!-- שאלות הבנה -->
+    <section>
+      <h3>שאלות הבנה ובטיחות</h3>
       
-      <!-- תאריך ומקום -->
-      <section>
-        <label id="lbl-datetime">תאריך ושעה:</label>
-        <input type="text" id="dateTime" readonly>
-        
-        <label id="lbl-location">מקום ההדרכה:</label>
-        <input type="text" id="location" required>
-      </section>
-
-      <!-- פרטי עובד -->
-      <section>
-        <label id="lbl-empName">שם העובד:</label>
-        <input type="text" id="empName" required>
-        
-        <label id="lbl-empId">מספר עובד/ת"ז:</label>
-        <input type="text" id="empId" required>
-      </section>
-
-      <!-- צילום עובד -->
-      <section>
-        <label id="lbl-photo">צילום העובד:</label>
-        <input type="file" id="workerPhoto" accept="image/*" capture="camera" required>
-      </section>
-
-      <!-- סוג ציוד -->
-      <section>
-        <label id="lbl-equipment">סוג העגלה / הציוד:</label>
-        <select id="equipmentType">
-          <option value="forklift">מלגזה</option>
-          <option value="electric_pallet">עגלת משטחים חשמלית</option>
-          <option value="order_picker">מלקטת</option>
+      <div class="quiz-group" style="margin-bottom:15px;">
+        <label>1. מהי הפעולה הראשונה שיש לבצע לפני תחילת עבודה או טיפול בציוד?</label>
+        <select id="q1">
+          <option value="">-- בחר תשובה --</option>
+          <option value="wrong1">להתחיל לעבוד מיד כדי לחסוך זמן</option>
+          <option value="correct">לוודא ציוד מגן אישי ולבצע ניתוק מקורות אנרגיה (LOTO)</option>
+          <option value="wrong2">לנקות את סביבת העבודה בלבד</option>
         </select>
-      </section>
+        <div id="q1-feedback" style="font-weight:bold; margin-top:5px;"></div>
+      </div>
 
-      <!-- מבחן בטיחות -->
-      <section id="quizSection">
-        <h3 id="lbl-quizTitle">מבחן בטיחות קצר</h3>
-        <div class="question">
-          <p id="q1-text">1. מה יש לבדוק לפני תחילת משמרת?</p>
-          <label><input type="radio" name="q1" value="correct"> בלמים, צופר והיגוי</label><br>
-          <label><input type="radio" name="q1" value="wrong"> שום דבר, מניעים ונוסעים</label>
-        </div>
-      </section>
+      <div class="quiz-group">
+        <label>2. מה עושים במידה ומזהים תקלה או מפגע בטיחותי בכלי?</label>
+        <select id="q2">
+          <option value="">-- בחר תשובה --</option>
+          <option value="wrong1">ממשיכים לעבוד ומדווחים בסוף המשמרת</option>
+          <option value="wrong2">מנסים לתקן לבד גם ללא הסמכה</option>
+          <option value="correct">עוצרים את העבודה מיד ומדווחים למנהל/ממונה בטיחות</option>
+        </select>
+        <div id="q2-feedback" style="font-weight:bold; margin-top:5px;"></div>
+      </div>
+    </section>
 
-      <!-- חתימות -->
-      <section>
-        <label id="lbl-empSig">חתימת העובד:</label>
-        <canvas id="empSigCanvas" width="300" height="150"></canvas>
-        <button type="button" onclick="clearSig(empSignaturePad)">נקה חתימה</button>
+    <!-- פרטי הדרכה וחתימה -->
+    <section>
+      <label for="trainee-name">שם העובד שעובר הדרכה:</label>
+      <input type="text" id="trainee-name" placeholder="הכנס שם מלא">
 
-        <label id="lbl-instSig">חתימת המדריך:</label>
-        <canvas id="instSigCanvas" width="300" height="150"></canvas>
-        <button type="button" onclick="clearSig(instSignaturePad)">נקה חתימה</button>
-      </section>
+      <label for="instructor-name">שם המדריך:</label>
+      <input type="text" id="instructor-name" placeholder="הכנס שם מלא">
 
-      <button type="button" onclick="submitForm()">סכום ושמור טופס (PDF)</button>
-    </form>
+      <label>חתימת העובד:</label>
+      <div class="sig-container">
+        <canvas id="sig-canvas" width="300" height="120"></canvas>
+      </div>
+      <button class="btn-clear" id="btn-clear-sig">נקה חתימה</button>
+
+      <button class="btn-submit" id="btn-submit">שמור והפק PDF</button>
+    </section>
   </main>
 
   <script src="app.js"></script>

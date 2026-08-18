@@ -1,78 +1,115 @@
-// רישום Service Worker לעבודה באופליין
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js')
-    .then(() => console.log('Service Worker Registered'));
-}
-
-// קביעת תאריך ושעה אוטומטיים
-document.getElementById('dateTime').value = new Date().toLocaleString();
-
-// אתחול משטחי חתימה
-const empSigCanvas = document.getElementById('empSigCanvas');
-const instSigCanvas = document.getElementById('instSigCanvas');
-const empSignaturePad = new SignaturePad(empSigCanvas);
-const instSignaturePad = new SignaturePad(instSigCanvas);
-
-function clearSig(pad) {
-  pad.clear();
-}
-
-// מילון שפות לבסיס הממשק
-const dictionary = {
-  he: { title: "הדרכת בטיחות בציוד", datetime: "תאריך ושעה:", location: "מקום ההדרכה:" },
-  en: { title: "Equipment Safety Training", datetime: "Date & Time:", location: "Location:" },
-  hi: { title: "उपकरण सुरक्षा प्रशिक्षण", datetime: "दिनांक और समय:", location: "स्थान:" },
-  th: { title: "การฝึกอบรมความปลอดภัยของอุปกรณ์", datetime: "วันที่และเวลา:", location: "สถานที่:" }
+// הסברים על הכלים
+const toolDescriptions = {
+  "אקסטרודר": "חובה לחבוש משקפי מגן וכפפות חום. יש לוודא תקינות ונטילציה ואיסור מוחלט על הכנסת ידיים לאזור החם/הנע.",
+  "מערכת שקילה": "יש לוודא נעילת משטחים, בדיקת כבלי חשמל ותקינות החיישנים לפני ההפעלה.",
+  "מלגזה": "חובת חגירת חגורת בטיחות, בדיקת בלמים והרמה בגובה מותר בלבד. נסיעה לפי שבילים מוגדרים.",
+  "מערכת מים/צ'ילר": "יש לבדוק לחצים, נזילות מים ולוודא כי שסתומי הלחץ פתוחים ותקינים."
 };
 
-function changeLanguage(lang) {
-  document.getElementById('lbl-title').innerText = dictionary[lang].title;
-  document.getElementById('lbl-datetime').innerText = dictionary[lang].datetime;
-  document.getElementById('lbl-location').innerText = dictionary[lang].location;
-  // כנ"ל לשאר התיקויות והטקסטים בטופס
+// הצגת הסבר על כלי
+document.getElementById('tool-select').addEventListener('change', (e) => {
+  const tool = e.target.value;
+  const infoBox = document.getElementById('tool-info');
+  const descText = document.getElementById('tool-desc');
+  
+  if (toolDescriptions[tool]) {
+    descText.innerText = toolDescriptions[tool];
+    infoBox.style.display = 'block';
+  } else {
+    infoBox.style.display = 'none';
+  }
+});
+
+// משוב בזמן אמת לשאלות
+document.getElementById('q1').addEventListener('change', (e) => {
+  const feedback = document.getElementById('q1-feedback');
+  if (e.target.value === 'correct') {
+    feedback.innerText = '✓ תשובה נכונה!';
+    feedback.style.color = 'green';
+  } else if (e.target.value) {
+    feedback.innerText = '✗ תשובה שגויה, נסה שוב.';
+    feedback.style.color = 'red';
+  } else {
+    feedback.innerText = '';
+  }
+});
+
+document.getElementById('q2').addEventListener('change', (e) => {
+  const feedback = document.getElementById('q2-feedback');
+  if (e.target.value === 'correct') {
+    feedback.innerText = '✓ תשובה נכונה!';
+    feedback.style.color = 'green';
+  } else if (e.target.value) {
+    feedback.innerText = '✗ תשובה שגויה, נסה שוב.';
+    feedback.style.color = 'red';
+  } else {
+    feedback.innerText = '';
+  }
+});
+
+// ניהול קנווס החתימה
+const canvas = document.getElementById('sig-canvas');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return { x: clientX - rect.left, y: clientY - rect.top };
 }
 
-// שמירת נתונים ב-IndexedDB לעבודה ללא אינטרנט
-function saveToOfflineDB(data) {
-  const request = indexedDB.open("SafetyDB", 1);
-  request.onupgradeneeded = (e) => {
-    const db = e.target.result;
-    db.createObjectStore("submissions", { autoIncrement: true });
-  };
-  request.onsuccess = (e) => {
-    const db = e.target.result;
-    const tx = db.transaction("submissions", "readwrite");
-    tx.objectStore("submissions").add(data);
-    alert("הטופס נשמר בהצלחה במכשיר (אופליין)!");
-  };
-}
+canvas.addEventListener('mousedown', (e) => { isDrawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
+canvas.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); } });
+canvas.addEventListener('mouseup', () => isDrawing = false);
 
-// יצירת PDF וסיום
-function submitForm() {
-  const data = {
-    empName: document.getElementById('empName').value,
-    empId: document.getElementById('empId').value,
-    location: document.getElementById('location').value,
-    date: document.getElementById('dateTime').value,
-    equipment: document.getElementById('equipmentType').value
-  };
+canvas.addEventListener('touchstart', (e) => { isDrawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); e.preventDefault(); });
+canvas.addEventListener('touchmove', (e) => { if (isDrawing) { const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); } });
+canvas.addEventListener('touchend', () => isDrawing = false);
 
-  // שמירה מקומית
-  saveToOfflineDB(data);
+document.getElementById('btn-clear-sig').addEventListener('click', () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
 
-  // הפקת קובץ PDF
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  
-  doc.text(`Safety Form - ${data.empName}`, 10, 10);
-  doc.text(`Date: ${data.date}`, 10, 20);
-  doc.text(`Equipment: ${data.equipment}`, 10, 30);
-  
-  // הוספת החתימה ל-PDF
-  if (!empSignaturePad.isEmpty()) {
-    const sigData = empSignaturePad.toDataURL();
-    doc.addImage(sigData, 'PNG', 10, 40, 50, 25);
+// הפקת PDF מלא עם כל הנתונים
+document.getElementById('btn-submit').addEventListener('click', () => {
+  const site = document.getElementById('site-select').value;
+  const tool = document.getElementById('tool-select').value;
+  const trainee = document.getElementById('trainee-name').value;
+  const instructor = document.getElementById('instructor-name').value;
+  const q1 = document.getElementById('q1').value;
+  const q2 = document.getElementById('q2').value;
+
+  if (!site || !tool || !trainee || !instructor) {
+    alert('נא למלא את כל השדות (מיקום, כלי, שם עובד ומדריך)');
+    return;
   }
 
-  doc.save(`Safety_Form_${data.empId}.pdf`);
-}
+  if (q1 !== 'correct' || q2 !== 'correct') {
+    alert('יש לענות נכון על שתי שאלות הבטיחות לפני השמירה');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const dateStr = new Date().toLocaleDateString('he-IL');
+
+  // כתיבת הנתונים לקובץ ה-PDF
+  doc.setFontSize(18);
+  doc.text("אישור מעבר הדרכת בטיחות", 105, 20, { align: "center" });
+
+  doc.setFontSize(12);
+  doc.text(`תאריך: ${dateStr}`, 180, 35, { align: "right" });
+  doc.text(`מיקום: ${site}`, 180, 45, { align: "right" });
+  doc.text(`ציוד/כלי: ${tool}`, 180, 55, { align: "right" });
+  doc.text(`שם העובד: ${trainee}`, 180, 65, { align: "right" });
+  doc.text(`שם המדריך: ${instructor}`, 180, 75, { align: "right" });
+  doc.text(`מבחן הבנה: עבר בהצלחה (2/2)`, 180, 85, { align: "right" });
+
+  // הוספת תמונת החתימה
+  doc.text("חתימת העובד:", 180, 100, { align: "right" });
+  const sigImg = canvas.toDataURL('image/png');
+  doc.addImage(sigImg, 'PNG', 120, 105, 60, 30);
+
+  doc.save(`הדרכת_בטיחות_${trainee}_${dateStr}.pdf`);
+});
