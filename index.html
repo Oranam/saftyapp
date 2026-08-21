@@ -7,43 +7,50 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
   <style>
-    /* עיצוב מיוחד בעת ייצוא ל-PDF / הדפסה */
     @media print {
-      body { background: #fff; color: #000; font-size: 14pt; }
-      button, input[type="file"], .btn-clear { display: none !important; }
-      select, input[type="text"] { border: none !important; appearance: none; -webkit-appearance: none; font-weight: bold; background: transparent; }
-      .no-print { display: none !important; }
-      #form-container { width: 100%; margin: 0; padding: 0; }
+      body { background: #fff; color: #000; font-family: sans-serif; padding: 20px; }
+      button, input[type="file"], .btn-clear, .no-print { display: none !important; }
+      .print-only { display: block !important; }
       .sig-container { border: 1px solid #000 !important; }
+      #form-container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
     }
+    .print-val { display: none; font-weight: bold; font-size: 1.1em; color: #111; }
+    body.is-printing .print-val { display: inline-block; }
+    body.is-printing select, body.is-printing input[type="text"] { display: none !important; }
   </style>
 </head>
 <body>
 
   <div id="form-container">
-    <header>
-      <h1 style="text-align: center;">אישור מעבר הדרכת בטיחות</h1>
+    <header style="text-align: center; margin-bottom: 20px;">
+      <h1>אישור מעבר הדרכת בטיחות</h1>
     </header>
 
     <main>
       <section style="margin-bottom: 15px;">
-        <label for="site-select"><strong>מיקום:</strong> </label>
-        <select id="site-select">
-          <option value="">-- בחר מיקום --</option>
-          <option value="תנובות">תנובות</option>
-          <option value="תוספים">תוספים</option>
-          <option value="לבנים">לבנים</option>
-          <option value="גלבוע">גלבוע</option>
-        </select>
-        <br><br>
-        <label for="tool-select"><strong>ציוד/כלי:</strong> </label>
-        <select id="tool-select">
-          <option value="">-- בחר כלי --</option>
-          <option value="אקסטרודר">אקסטרודר</option>
-          <option value="מערכת שקילה">מערכת שקילה</option>
-          <option value="מלגזה">מלגזה</option>
-          <option value="מערכת מים/צ'ילר">מערכת מים/צ'ילר</option>
-        </select>
+        <p>
+          <strong>מיקום:</strong> 
+          <span id="site-val" class="print-val"></span>
+          <select id="site-select">
+            <option value="">-- בחר מיקום --</option>
+            <option value="תנובות">תנובות</option>
+            <option value="תוספים">תוספים</option>
+            <option value="לבנים">לבנים</option>
+            <option value="גלבוע">גלבוע</option>
+          </select>
+        </p>
+
+        <p>
+          <strong>ציוד/כלי:</strong> 
+          <span id="tool-val" class="print-val"></span>
+          <select id="tool-select">
+            <option value="">-- בחר כלי --</option>
+            <option value="אקסטרודר">אקסטרודר</option>
+            <option value="מערכת שקילה">מערכת שקילה</option>
+            <option value="מלגזה">מלגזה</option>
+            <option value="מערכת מים/צ'ילר">מערכת מים/צ'ילר</option>
+          </select>
+        </p>
 
         <div id="tool-info" style="display:none; background:#eef7ff; padding:10px; border-right:4px solid #1976d2; margin-top:10px; border-radius:4px;">
           <strong>הנחיות בטיחות לכלי:</strong>
@@ -58,31 +65,33 @@
         <h3>שאלות הבנה ובטיחות</h3>
         
         <div class="quiz-group" style="margin-bottom:15px;">
-          <label>1. מהי הפעולה הראשונה שיש לבצע לפני תחילת עבודה או טיפול בציוד?</label><br>
+          <p><strong>1. מהי הפעולה הראשונה שיש לבצע לפני תחילת עבודה או טיפול בציוד?</strong></p>
+          <span id="q1-val" class="print-val"></span>
           <select id="q1">
             <option value="">-- בחר תשובה --</option>
             <option value="wrong1">להתחיל לעבוד מיד כדי לחסוך זמן</option>
             <option value="correct">לוודא ציוד מגן אישי ולבצע ניתוק מקורות אנרגיה (LOTO)</option>
             <option value="wrong2">לנקות את סביבת העבודה בלבד</option>
           </select>
-          <div id="q1-feedback" style="font-weight:bold; margin-top:5px;"></div>
+          <div id="q1-feedback" class="no-print" style="font-weight:bold; margin-top:5px;"></div>
         </div>
 
         <div class="quiz-group">
-          <label>2. מה עושים במידה ומזהים תקלה או מפגע בטיחותי בכלי?</label><br>
+          <p><strong>2. מה עושים במידה ומזהים תקלה או מפגע בטיחותי בכלי?</strong></p>
+          <span id="q2-val" class="print-val"></span>
           <select id="q2">
             <option value="">-- בחר תשובה --</option>
             <option value="wrong1">ממשיכים לעבוד ומדווחים בסוף המשמרת</option>
             <option value="wrong2">מנסים לתקן לבד גם ללא הסמכה</option>
             <option value="correct">עוצרים את העבודה מיד ומדווחים למנהל/ממונה בטיחות</option>
           </select>
-          <div id="q2-feedback" style="font-weight:bold; margin-top:5px;"></div>
+          <div id="q2-feedback" class="no-print" style="font-weight:bold; margin-top:5px;"></div>
         </div>
       </section>
 
       <hr style="margin:15px 0;">
 
-      <!-- תצלום הדרכה / ציוד -->
+      <!-- תצלום הדרכה -->
       <section style="margin-bottom: 15px;">
         <h3>תמונת תיעוד הדרכה</h3>
         <input type="file" id="camera-input" accept="image/*" capture="environment" class="no-print">
@@ -96,11 +105,13 @@
       <!-- פרטי עובד ומדריך וחתימות -->
       <section>
         <div class="person-block" style="margin-bottom:15px;">
-          <label for="trainee-name"><strong>שם העובד שעבר הדרכה:</strong> </label>
-          <input type="text" id="trainee-name" placeholder="הכנס שם מלא של העובד">
+          <p>
+            <strong>שם העובד שעבר הדרכה:</strong> 
+            <span id="trainee-val" class="print-val"></span>
+            <input type="text" id="trainee-name" placeholder="הכנס שם מלא של העובד">
+          </p>
 
-          <br><br>
-          <label><strong>חתימת העובד:</strong></label>
+          <p><strong>חתימת העובד:</strong></p>
           <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none; width:300px; height:100px; margin-top:5px;">
             <canvas id="sig-trainee" width="300" height="100"></canvas>
           </div>
@@ -108,11 +119,13 @@
         </div>
 
         <div class="person-block" style="margin-bottom:15px;">
-          <label for="instructor-name"><strong>שם המדריך:</strong> </label>
-          <input type="text" id="instructor-name" placeholder="הכנס שם מלא של המדריך">
+          <p>
+            <strong>שם המדריך:</strong> 
+            <span id="instructor-val" class="print-val"></span>
+            <input type="text" id="instructor-name" placeholder="הכנס שם מלא של המדריך">
+          </p>
 
-          <br><br>
-          <label><strong>חתימת המדריך:</strong></label>
+          <p><strong>חתימת המדריך:</strong></p>
           <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none; width:300px; height:100px; margin-top:5px;">
             <canvas id="sig-instructor" width="300" height="100"></canvas>
           </div>

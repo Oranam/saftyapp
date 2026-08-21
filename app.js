@@ -123,25 +123,42 @@ function initSignatureCanvas(canvasId, clearBtnId) {
 initSignatureCanvas('sig-trainee', 'btn-clear-trainee');
 initSignatureCanvas('sig-instructor', 'btn-clear-instructor');
 
-// הפקת PDF מלא דרך מנגנון ההדפסה של הדפדפן
+// הפקת PDF מלא והמרה זמנית של השדות לטקסט
 document.getElementById('btn-submit').addEventListener('click', () => {
-  const site = document.getElementById('site-select').value;
-  const tool = document.getElementById('tool-select').value;
-  const trainee = document.getElementById('trainee-name').value;
-  const instructor = document.getElementById('instructor-name').value;
-  const q1 = document.getElementById('q1').value;
-  const q2 = document.getElementById('q2').value;
+  const siteSelect = document.getElementById('site-select');
+  const toolSelect = document.getElementById('tool-select');
+  const traineeInput = document.getElementById('trainee-name');
+  const instructorInput = document.getElementById('instructor-name');
+  const q1Select = document.getElementById('q1');
+  const q2Select = document.getElementById('q2');
 
-  if (!site || !tool || !trainee || !instructor) {
+  if (!siteSelect.value || !toolSelect.value || !traineeInput.value || !instructorInput.value) {
     alert('נא למלא את כל השדות (מיקום, כלי, שם עובד ומדריך)');
     return;
   }
 
-  if (q1 !== 'correct' || q2 !== 'correct') {
+  if (q1Select.value !== 'correct' || q2Select.value !== 'correct') {
     alert('יש לענות נכון על שתי שאלות הבטיחות לפני השמירה');
     return;
   }
 
-  // הפעלת חלון הדפסה/שמירה כ-PDF
-  window.print();
+  // עדכון השדות השטוחים לתצוגת ההדפסה
+  document.getElementById('site-val').innerText = siteSelect.value;
+  document.getElementById('tool-val').innerText = toolSelect.value;
+  document.getElementById('trainee-val').innerText = traineeInput.value;
+  document.getElementById('instructor-val').innerText = instructorInput.value;
+  document.getElementById('q1-val').innerText = q1Select.options[q1Select.selectedIndex].text;
+  document.getElementById('q2-val').innerText = q2Select.options[q2Select.selectedIndex].text;
+
+  // הפעלת מצב הדפסה
+  document.body.classList.add('is-printing');
+
+  // פתיחת חלון הדפסה/שמירה כ-PDF
+  setTimeout(() => {
+    window.print();
+    // ביטול מצב הדפסה לאחר סגירת החלון
+    setTimeout(() => {
+      document.body.classList.remove('is-printing');
+    }, 1000);
+  }, 100);
 });
