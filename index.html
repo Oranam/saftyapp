@@ -6,98 +6,109 @@
   <title>טופס הדרכת בטיחות</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
+  <!-- ספרייה להפקת PDF ישירות מהמסך -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
-  <header>
-    <h1>טופס הדרכת בטיחות ציוד</h1>
-  </header>
+  <div id="form-container">
+    <header>
+      <h1>טופס הדרכת בטיחות ציוד</h1>
+    </header>
 
-  <main>
-    <section>
-      <label for="site-select">בחר מיקום:</label>
-      <select id="site-select">
-        <option value="">-- בחר מיקום --</option>
-        <option value="תנובות">תנובות</option>
-        <option value="תוספים">תוספים</option>
-        <option value="לבנים">לבנים</option>
-        <option value="גלבוע">גלבוע</option>
-      </select>
-
-      <label for="tool-select">בחר כלי/ציוד:</label>
-      <select id="tool-select">
-        <option value="">-- בחר כלי --</option>
-        <option value="אקסטרודר">אקסטרודר</option>
-        <option value="מערכת שקילה">מערכת שקילה</option>
-        <option value="מלגזה">מלגזה</option>
-        <option value="מערכת מים/צ'ילר">מערכת מים/צ'ילר</option>
-      </select>
-
-      <!-- אזור הסבר קצר על הכלי הנבחר -->
-      <div id="tool-info" style="display:none; background:#eef7ff; padding:10px; border-right:4px solid #1976d2; margin-top:10px; border-radius:4px;">
-        <strong>הנחיות בטיחות לכלי:</strong>
-        <p id="tool-desc" style="margin:5px 0 0 0;"></p>
-      </div>
-    </section>
-
-    <!-- שאלות הבנה -->
-    <section>
-      <h3>שאלות הבנה ובטיחות</h3>
-      
-      <div class="quiz-group" style="margin-bottom:15px;">
-        <label>1. מהי הפעולה הראשונה שיש לבצע לפני תחילת עבודה או טיפול בציוד?</label>
-        <select id="q1">
-          <option value="">-- בחר תשובה --</option>
-          <option value="wrong1">להתחיל לעבוד מיד כדי לחסוך זמן</option>
-          <option value="correct">לוודא ציוד מגן אישי ולבצע ניתוק מקורות אנרגיה (LOTO)</option>
-          <option value="wrong2">לנקות את סביבת העבודה בלבד</option>
+    <main>
+      <section>
+        <label for="site-select">בחר מיקום:</label>
+        <select id="site-select">
+          <option value="">-- בחר מיקום --</option>
+          <option value="תנובות">תנובות</option>
+          <option value="תוספים">תוספים</option>
+          <option value="לבנים">לבנים</option>
+          <option value="גלבוע">גלבוע</option>
         </select>
-        <div id="q1-feedback" style="font-weight:bold; margin-top:5px;"></div>
-      </div>
 
-      <div class="quiz-group">
-        <label>2. מה עושים במידה ומזהים תקלה או מפגע בטיחותי בכלי?</label>
-        <select id="q2">
-          <option value="">-- בחר תשובה --</option>
-          <option value="wrong1">ממשיכים לעבוד ומדווחים בסוף המשמרת</option>
-          <option value="wrong2">מנסים לתקן לבד גם ללא הסמכה</option>
-          <option value="correct">עוצרים את העבודה מיד ומדווחים למנהל/ממונה בטיחות</option>
+        <label for="tool-select">בחר כלי/ציוד:</label>
+        <select id="tool-select">
+          <option value="">-- בחר כלי --</option>
+          <option value="אקסטרודר">אקסטרודר</option>
+          <option value="מערכת שקילה">מערכת שקילה</option>
+          <option value="מלגזה">מלגזה</option>
+          <option value="מערכת מים/צ'ילר">מערכת מים/צ'ילר</option>
         </select>
-        <div id="q2-feedback" style="font-weight:bold; margin-top:5px;"></div>
-      </div>
-    </section>
 
-    <!-- פרטי עובד ומדריך וחתימות -->
-    <section>
-      <!-- חלק 1: עובד -->
-      <div class="person-block">
-        <label for="trainee-name">שם העובד שעובר הדרכה:</label>
-        <input type="text" id="trainee-name" placeholder="הכנס שם מלא של העובד">
-
-        <label>חתימת העובד:</label>
-        <div class="sig-container">
-          <canvas id="sig-trainee" width="300" height="120"></canvas>
+        <div id="tool-info" style="display:none; background:#eef7ff; padding:10px; border-right:4px solid #1976d2; margin-top:10px; border-radius:4px;">
+          <strong>הנחיות בטיחות לכלי:</strong>
+          <p id="tool-desc" style="margin:5px 0 0 0;"></p>
         </div>
-        <button type="button" class="btn-clear" id="btn-clear-trainee">נקה חתימת עובד</button>
-      </div>
+      </section>
 
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
-
-      <!-- חלק 2: מדריך -->
-      <div class="person-block">
-        <label for="instructor-name">שם המדריך:</label>
-        <input type="text" id="instructor-name" placeholder="הכנס שם מלא של המדריך">
-
-        <label>חתימת המדריך:</label>
-        <div class="sig-container">
-          <canvas id="sig-instructor" width="300" height="120"></canvas>
+      <!-- שאלות הבנה -->
+      <section>
+        <h3>שאלות הבנה ובטיחות</h3>
+        
+        <div class="quiz-group" style="margin-bottom:15px;">
+          <label>1. מהי הפעולה הראשונה יש לבצע לפני תחילת עבודה או טיפול בציוד?</label>
+          <select id="q1">
+            <option value="">-- בחר תשובה --</option>
+            <option value="wrong1">להתחיל לעבוד מיד כדי לחסוך זמן</option>
+            <option value="correct">לוודא ציוד מגן אישי ולבצע ניתוק מקורות אנרגיה (LOTO)</option>
+            <option value="wrong2">לנקות את סביבת העבודה בלבד</option>
+          </select>
+          <div id="q1-feedback" style="font-weight:bold; margin-top:5px;"></div>
         </div>
-        <button type="button" class="btn-clear" id="btn-clear-instructor">נקה חתימת מדריך</button>
-      </div>
 
-      <button type="button" class="btn-submit" id="btn-submit" style="margin-top: 20px;">שמור והפק PDF</button>
-    </section>
-  </main>
+        <div class="quiz-group">
+          <label>2. מה עושים במידה ומזהים תקלה או מפגע בטיחותי בכלי?</label>
+          <select id="q2">
+            <option value="">-- בחר תשובה --</option>
+            <option value="wrong1">ממשיכים לעבוד ומדווחים בסוף המשמרת</option>
+            <option value="wrong2">מנסים לתקן לבד גם ללא הסמכה</option>
+            <option value="correct">עוצרים את העבודה מיד ומדווחים למנהל/ממונה בטיחות</option>
+          </select>
+          <div id="q2-feedback" style="font-weight:bold; margin-top:5px;"></div>
+        </div>
+      </section>
+
+      <!-- תצלום הדרכה / ציוד -->
+      <section>
+        <h3>צילום / תמונת ההדרכה</h3>
+        <label for="camera-input">צלם או העלה תמונה:</label>
+        <input type="file" id="camera-input" accept="image/*" capture="environment">
+        <div id="photo-preview-container" style="margin-top:10px; display:none;">
+          <img id="photo-preview" src="" alt="תמונת הדרכה" style="max-width:100%; max-height:250px; border:1px solid #ccc; border-radius:5px;">
+        </div>
+      </section>
+
+      <!-- פרטי עובד ומדריך וחתימות -->
+      <section>
+        <div class="person-block">
+          <label for="trainee-name">שם העובד שעובר הדרכה:</label>
+          <input type="text" id="trainee-name" placeholder="הכנס שם מלא של העובד">
+
+          <label>חתימת העובד:</label>
+          <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none;">
+            <canvas id="sig-trainee" width="300" height="120"></canvas>
+          </div>
+          <button type="button" class="btn-clear" id="btn-clear-trainee">נקה חתימת עובד</button>
+        </div>
+
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+
+        <div class="person-block">
+          <label for="instructor-name">שם המדריך:</label>
+          <input type="text" id="instructor-name" placeholder="הכנס שם מלא של המדריך">
+
+          <label>חתימת המדריך:</label>
+          <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none;">
+            <canvas id="sig-instructor" width="300" height="120"></canvas>
+          </div>
+          <button type="button" class="btn-clear" id="btn-clear-instructor">נקה חתימת מדריך</button>
+        </div>
+
+        <button type="button" class="btn-submit" id="btn-submit" style="margin-top: 20px; width:100%; padding:12px; background:#1976d2; color:#fff; border:none; border-radius:5px; font-size:16px;">שמור והפק PDF</button>
+      </section>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
