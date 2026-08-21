@@ -6,7 +6,6 @@
   <title>טופס הדרכת בטיחות</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -68,21 +67,35 @@
       </div>
     </section>
 
-    <!-- פרטי הדרכה וחתימה -->
+    <!-- פרטי עובד ומדריך וחתימות -->
     <section>
-      <label for="trainee-name">שם העובד שעובר הדרכה:</label>
-      <input type="text" id="trainee-name" placeholder="הכנס שם מלא">
+      <!-- חלק 1: עובד -->
+      <div class="person-block">
+        <label for="trainee-name">שם העובד שעובר הדרכה:</label>
+        <input type="text" id="trainee-name" placeholder="הכנס שם מלא של העובד">
 
-      <label for="instructor-name">שם המדריך:</label>
-      <input type="text" id="instructor-name" placeholder="הכנס שם מלא">
-
-      <label>חתימת העובד:</label>
-      <div class="sig-container">
-        <canvas id="sig-canvas" width="300" height="120"></canvas>
+        <label>חתימת העובד:</label>
+        <div class="sig-container">
+          <canvas id="sig-trainee" width="300" height="120"></canvas>
+        </div>
+        <button type="button" class="btn-clear" id="btn-clear-trainee">נקה חתימת עובד</button>
       </div>
-      <button class="btn-clear" id="btn-clear-sig">נקה חתימה</button>
 
-      <button class="btn-submit" id="btn-submit">שמור והפק PDF</button>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+
+      <!-- חלק 2: מדריך -->
+      <div class="person-block">
+        <label for="instructor-name">שם המדריך:</label>
+        <input type="text" id="instructor-name" placeholder="הכנס שם מלא של המדריך">
+
+        <label>חתימת המדריך:</label>
+        <div class="sig-container">
+          <canvas id="sig-instructor" width="300" height="120"></canvas>
+        </div>
+        <button type="button" class="btn-clear" id="btn-clear-instructor">נקה חתימת מדריך</button>
+      </div>
+
+      <button type="button" class="btn-submit" id="btn-submit" style="margin-top: 20px;">שמור והפק PDF</button>
     </section>
   </main>
 
