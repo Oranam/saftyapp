@@ -61,7 +61,7 @@ document.getElementById('camera-input').addEventListener('change', function(e) {
   }
 });
 
-// מנוע חתימה מתוקן (עובד מעולה גם במגע וגם בעכבר)
+// מנוע חתימה
 function initSignatureCanvas(canvasId, clearBtnId) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
@@ -105,13 +105,11 @@ function initSignatureCanvas(canvasId, clearBtnId) {
     isDrawing = false;
   }
 
-  // אירועי עכבר
   canvas.addEventListener('mousedown', startDrawing);
   canvas.addEventListener('mousemove', draw);
   canvas.addEventListener('mouseup', stopDrawing);
   canvas.addEventListener('mouseleave', stopDrawing);
 
-  // אירועי מגע בטלפון (מציג את החתימה בלייב)
   canvas.addEventListener('touchstart', (e) => { startDrawing(e); e.preventDefault(); }, { passive: false });
   canvas.addEventListener('touchmove', (e) => { draw(e); e.preventDefault(); }, { passive: false });
   canvas.addEventListener('touchend', (e) => { stopDrawing(); e.preventDefault(); }, { passive: false });
@@ -121,11 +119,11 @@ function initSignatureCanvas(canvasId, clearBtnId) {
   });
 }
 
-// הפעלת משטחי החתימה
+// הפעלת החתימות
 initSignatureCanvas('sig-trainee', 'btn-clear-trainee');
 initSignatureCanvas('sig-instructor', 'btn-clear-instructor');
 
-// הפקת PDF מלא והורדה ישירה
+// הפקת PDF מלא דרך מנגנון ההדפסה של הדפדפן
 document.getElementById('btn-submit').addEventListener('click', () => {
   const site = document.getElementById('site-select').value;
   const tool = document.getElementById('tool-select').value;
@@ -144,14 +142,6 @@ document.getElementById('btn-submit').addEventListener('click', () => {
     return;
   }
 
-  const element = document.getElementById('form-container');
-  const opt = {
-    margin: 0.5,
-    filename: `הדרכת_בטיחות_${trainee}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opt).from(element).save();
+  // הפעלת חלון הדפסה/שמירה כ-PDF
+  window.print();
 });

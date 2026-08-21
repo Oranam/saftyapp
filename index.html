@@ -6,19 +6,28 @@
   <title>טופס הדרכת בטיחות</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
-  <!-- ספרייה להפקת PDF ישירות מהמסך -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    /* עיצוב מיוחד בעת ייצוא ל-PDF / הדפסה */
+    @media print {
+      body { background: #fff; color: #000; font-size: 14pt; }
+      button, input[type="file"], .btn-clear { display: none !important; }
+      select, input[type="text"] { border: none !important; appearance: none; -webkit-appearance: none; font-weight: bold; background: transparent; }
+      .no-print { display: none !important; }
+      #form-container { width: 100%; margin: 0; padding: 0; }
+      .sig-container { border: 1px solid #000 !important; }
+    }
+  </style>
 </head>
 <body>
 
   <div id="form-container">
     <header>
-      <h1>טופס הדרכת בטיחות ציוד</h1>
+      <h1 style="text-align: center;">אישור מעבר הדרכת בטיחות</h1>
     </header>
 
     <main>
-      <section>
-        <label for="site-select">בחר מיקום:</label>
+      <section style="margin-bottom: 15px;">
+        <label for="site-select"><strong>מיקום:</strong> </label>
         <select id="site-select">
           <option value="">-- בחר מיקום --</option>
           <option value="תנובות">תנובות</option>
@@ -26,8 +35,8 @@
           <option value="לבנים">לבנים</option>
           <option value="גלבוע">גלבוע</option>
         </select>
-
-        <label for="tool-select">בחר כלי/ציוד:</label>
+        <br><br>
+        <label for="tool-select"><strong>ציוד/כלי:</strong> </label>
         <select id="tool-select">
           <option value="">-- בחר כלי --</option>
           <option value="אקסטרודר">אקסטרודר</option>
@@ -42,12 +51,14 @@
         </div>
       </section>
 
+      <hr style="margin:15px 0;">
+
       <!-- שאלות הבנה -->
-      <section>
+      <section style="margin-bottom: 15px;">
         <h3>שאלות הבנה ובטיחות</h3>
         
         <div class="quiz-group" style="margin-bottom:15px;">
-          <label>1. מהי הפעולה הראשונה יש לבצע לפני תחילת עבודה או טיפול בציוד?</label>
+          <label>1. מהי הפעולה הראשונה שיש לבצע לפני תחילת עבודה או טיפול בציוד?</label><br>
           <select id="q1">
             <option value="">-- בחר תשובה --</option>
             <option value="wrong1">להתחיל לעבוד מיד כדי לחסוך זמן</option>
@@ -58,7 +69,7 @@
         </div>
 
         <div class="quiz-group">
-          <label>2. מה עושים במידה ומזהים תקלה או מפגע בטיחותי בכלי?</label>
+          <label>2. מה עושים במידה ומזהים תקלה או מפגע בטיחותי בכלי?</label><br>
           <select id="q2">
             <option value="">-- בחר תשובה --</option>
             <option value="wrong1">ממשיכים לעבוד ומדווחים בסוף המשמרת</option>
@@ -69,43 +80,46 @@
         </div>
       </section>
 
+      <hr style="margin:15px 0;">
+
       <!-- תצלום הדרכה / ציוד -->
-      <section>
-        <h3>צילום / תמונת ההדרכה</h3>
-        <label for="camera-input">צלם או העלה תמונה:</label>
-        <input type="file" id="camera-input" accept="image/*" capture="environment">
+      <section style="margin-bottom: 15px;">
+        <h3>תמונת תיעוד הדרכה</h3>
+        <input type="file" id="camera-input" accept="image/*" capture="environment" class="no-print">
         <div id="photo-preview-container" style="margin-top:10px; display:none;">
-          <img id="photo-preview" src="" alt="תמונת הדרכה" style="max-width:100%; max-height:250px; border:1px solid #ccc; border-radius:5px;">
+          <img id="photo-preview" src="" alt="תמונת הדרכה" style="max-width:100%; max-height:200px; border:1px solid #ccc; border-radius:5px;">
         </div>
       </section>
 
+      <hr style="margin:15px 0;">
+
       <!-- פרטי עובד ומדריך וחתימות -->
       <section>
-        <div class="person-block">
-          <label for="trainee-name">שם העובד שעובר הדרכה:</label>
+        <div class="person-block" style="margin-bottom:15px;">
+          <label for="trainee-name"><strong>שם העובד שעבר הדרכה:</strong> </label>
           <input type="text" id="trainee-name" placeholder="הכנס שם מלא של העובד">
 
-          <label>חתימת העובד:</label>
-          <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none;">
-            <canvas id="sig-trainee" width="300" height="120"></canvas>
+          <br><br>
+          <label><strong>חתימת העובד:</strong></label>
+          <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none; width:300px; height:100px; margin-top:5px;">
+            <canvas id="sig-trainee" width="300" height="100"></canvas>
           </div>
-          <button type="button" class="btn-clear" id="btn-clear-trainee">נקה חתימת עובד</button>
+          <button type="button" class="btn-clear no-print" id="btn-clear-trainee" style="margin-top:5px;">נקה חתימת עובד</button>
         </div>
 
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
-
-        <div class="person-block">
-          <label for="instructor-name">שם המדריך:</label>
+        <div class="person-block" style="margin-bottom:15px;">
+          <label for="instructor-name"><strong>שם המדריך:</strong> </label>
           <input type="text" id="instructor-name" placeholder="הכנס שם מלא של המדריך">
 
-          <label>חתימת המדריך:</label>
-          <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none;">
-            <canvas id="sig-instructor" width="300" height="120"></canvas>
+          <br><br>
+          <label><strong>חתימת המדריך:</strong></label>
+          <div class="sig-container" style="border:1px solid #000; background:#fff; touch-action:none; width:300px; height:100px; margin-top:5px;">
+            <canvas id="sig-instructor" width="300" height="100"></canvas>
           </div>
-          <button type="button" class="btn-clear" id="btn-clear-instructor">נקה חתימת מדריך</button>
+          <button type="button" class="btn-clear no-print" id="btn-clear-instructor" style="margin-top:5px;">נקה חתימת מדריך</button>
         </div>
 
-        <button type="button" class="btn-submit" id="btn-submit" style="margin-top: 20px; width:100%; padding:12px; background:#1976d2; color:#fff; border:none; border-radius:5px; font-size:16px;">שמור והפק PDF</button>
+        <button type="button" class="btn-submit no-print" id="btn-submit" style="margin-top:20px; width:100%; padding:12px; background:#1976d2; color:#fff; border:none; border-radius:5px; font-size:16px;">שמור והפק PDF</button>
       </section>
     </main>
   </div>
