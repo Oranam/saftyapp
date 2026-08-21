@@ -71,7 +71,7 @@ document.getElementById('btn-clear-sig').addEventListener('click', () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
-// הפקת PDF מלא עם כל הנתונים
+// שמירה והפקה כ-PDF/הדפסה נקייה
 document.getElementById('btn-submit').addEventListener('click', () => {
   const site = document.getElementById('site-select').value;
   const tool = document.getElementById('tool-select').value;
@@ -90,26 +90,6 @@ document.getElementById('btn-submit').addEventListener('click', () => {
     return;
   }
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const dateStr = new Date().toLocaleDateString('he-IL');
-
-  // כתיבת הנתונים לקובץ ה-PDF
-  doc.setFontSize(18);
-  doc.text("אישור מעבר הדרכת בטיחות", 105, 20, { align: "center" });
-
-  doc.setFontSize(12);
-  doc.text(`תאריך: ${dateStr}`, 180, 35, { align: "right" });
-  doc.text(`מיקום: ${site}`, 180, 45, { align: "right" });
-  doc.text(`ציוד/כלי: ${tool}`, 180, 55, { align: "right" });
-  doc.text(`שם העובד: ${trainee}`, 180, 65, { align: "right" });
-  doc.text(`שם המדריך: ${instructor}`, 180, 75, { align: "right" });
-  doc.text(`מבחן הבנה: עבר בהצלחה (2/2)`, 180, 85, { align: "right" });
-
-  // הוספת תמונת החתימה
-  doc.text("חתימת העובד:", 180, 100, { align: "right" });
-  const sigImg = canvas.toDataURL('image/png');
-  doc.addImage(sigImg, 'PNG', 120, 105, 60, 30);
-
-  doc.save(`הדרכת_בטיחות_${trainee}_${dateStr}.pdf`);
+  // פתיחת דיאלוג הדפסה/שמירה כ-PDF מובנה בדפדפן
+  window.print();
 });
